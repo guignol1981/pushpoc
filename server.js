@@ -1,9 +1,13 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const path = require('path');
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 app.use(express.static(path.join(__dirname, 'dist/pushpoc')));
 
