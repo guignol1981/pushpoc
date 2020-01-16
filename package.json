@@ -5,7 +5,8 @@
     "scripts": {
         "dev": "concurrently --kill-others \"nodemon server.js\"",
         "ng": "ng",
-        "start": "node server.js"
+        "start": "node server.js",
+        "postinstall": "node server.js"
     },
     "devDependencies": {
         "concurrently": "^5.0.2",
