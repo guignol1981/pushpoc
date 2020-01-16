@@ -1,4 +1,5 @@
 if (process.env.NODE_ENV !== 'prod') {
+    console.log('dev env detected');
     require('dotenv').config();
 }
 
