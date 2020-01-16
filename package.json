@@ -4,7 +4,6 @@
     "description": "Push notifications POC.",
     "scripts": {
         "dev": "concurrently --kill-others \"nodemon server.js\"",
-        "ng": "ng",
         "start": "node server.js",
         "postinstall": "node server.js"
     },
