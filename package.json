@@ -1,0 +1,20 @@
+{
+    "name": "pushpoc",
+    "version": "1.0.0",
+    "description": "Push notifications POC.",
+    "scripts": {
+        "dev": "concurrently --kill-others \"nodemon server.js\"",
+        "ng": "ng",
+        "start": "node server.js"
+    },
+    "devDependencies": {
+        "concurrently": "^5.0.2",
+        "eslint": "^6.0.1",
+        "eslint-config-google": "^0.13.0",
+        "nodemon": "^2.0.2"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.17.1"
+    }
+}
