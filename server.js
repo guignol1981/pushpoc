@@ -11,7 +11,7 @@ const server = http.createServer(app);
 const path = require('path');
 const PORT = process.env.PORT;
 
-app.use(express.static(path.join(__dirname, 'dist/pushpoc')));
+app.use(express.static(path.join(__dirname, 'app')));
 
 app.get('*', (_, res) => res.sendFile(path.join(__dirname, 'app/index.html')));
 
