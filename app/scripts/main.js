@@ -31,6 +31,15 @@ let swRegistration = null;
 if ('safari' in window && 'pushNotification' in window.safari) {
     console.log('Service Worker and Push is supported');
 
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("demo").innerHTML = this.responseText;
+        }
+    };
+    xhttp.open("GET", "https://localhost:3000/push", true);
+    xhttp.send();
+
     // var permissionData = window.safari.pushNotification.permission('web.com.example.domain');
     // checkRemotePermission(permissionData);
 }

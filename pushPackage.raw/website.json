@@ -1,0 +1,10 @@
+{
+    "websiteName": "PushPoc",
+    "websitePushID": "web.dti-ulaval.pushpoc",
+    "allowedDomains": [
+        "https://push-puc.herokuapp.com"
+    ],
+    "urlFormatString": "https://www.google.ca",
+    "authenticationToken": "19f8d7a6e9fb8a7f6d9330dabe",
+    "webServiceURL": "https://push-puc.herokuapp.com/push"
+}
