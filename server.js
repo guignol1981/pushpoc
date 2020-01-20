@@ -14,7 +14,7 @@ const port = process.env.PORT;
 
 app.use(express.static(path.join(__dirname, 'app')));
 
-app.use('/push', pushAPI);
+app.use('/', pushAPI);
 
 app.get('*', (_, res) => res.sendFile(path.join(__dirname, 'app/index.html')));
 

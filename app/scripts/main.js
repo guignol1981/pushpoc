@@ -1,193 +1,189 @@
-/*
-*
-*  Push Notifications codelab
-*  Copyright 2015 Google Inc. All rights reserved.
-*
-*  Licensed under the Apache License, Version 2.0 (the "License");
-*  you may not use this file except in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*      https://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing, software
-*  distributed under the License is distributed on an "AS IS" BASIS,
-*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-*  See the License for the specific language governing permissions and
-*  limitations under the License
-*
-*/
-
-/* eslint-env browser, es6 */
-
 'use strict';
 
 const applicationServerPublicKey = 'BEMnipj1c0AtSHkAGYORpFPQl0BLhPdn2rUH8Qrxr1DcavcPwcr3tC9_44_RPreTBDrekp7MRaO2Fv6z3_hU8NA';
 
 const pushButton = document.querySelector('.js-push-btn');
+const safari = document.getElementById('safari');
 
 let isSubscribed = false;
 let swRegistration = null;
 
+safari.addEventListener('click', () => {
+    window.safari.pushNotification.requestPermission(
+        'https://push-puc.herokuapp.com', // The web service URL.
+        'web.dti-ulaval.pushpoc',     // The Website Push ID.
+        {}, // Data that you choose to send to your server to help you identify the user.
+        checkRemotePermission         // The callback function.
+    );
+});
 
-var xhttp = new XMLHttpRequest();
-xhttp.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("demo").innerHTML = this.responseText;
+var checkRemotePermission = function (permissionData) {
+    if (permissionData.permission === 'default') {
+        // This is a new web service URL and its validity is unknown.
+        // window.safari.pushNotification.requestPermission(
+        //     'https://push-puc.herokuapp.com', // The web service URL.
+        //     'web.dti-ulaval.pushpoc',     // The Website Push ID.
+        //     {}, // Data that you choose to send to your server to help you identify the user.
+        //     checkRemotePermission         // The callback function.
+        // );
+    }
+    else if (permissionData.permission === 'denied') {
+        console.log('denied');
+        // The user said no.
+    }
+    else if (permissionData.permission === 'granted') {
+        console.log('granted', permissionData);
+        // The web service URL is a valid push provider, and the user said yes.
+        // permissionData.deviceToken is now available to use.
     }
 };
-xhttp.open("GET", "/push", true);
-xhttp.send();
 
+if ('safari' in window && 'pushNotification' in window.safari) {
+    console.log('Safari push is supported');
 
-// if ('safari' in window && 'pushNotification' in window.safari) {
-//     console.log('Service Worker and Push is supported');
+    // var xhttp = new XMLHttpRequest();
+    // xhttp.onreadystatechange = function () {
+    //     if (this.readyState == 4 && this.status == 200) {
+    //         document.getElementById("demo").innerHTML = this.responseText;
+    //     }
+    // };
+    // xhttp.open("GET", "/push", true);
+    // xhttp.send();
 
-//     console.log('Service Worker and Push is supported');
+    var permissionData = window.safari.pushNotification.permission('web.com.example.domain');
+    checkRemotePermission(permissionData);
+}
 
-//     var xhttp = new XMLHttpRequest();
-//     xhttp.onreadystatechange = function () {
-//         if (this.readyState == 4 && this.status == 200) {
-//             document.getElementById("demo").innerHTML = this.responseText;
-//         }
-//     };
-//     xhttp.open("GET", "https://localhost:3000/push", true);
-//     xhttp.send();
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+    console.log('Service Worker and Push is supported');
 
+    navigator.serviceWorker
+        .register('sw.js')
+        .then(function (swReg) {
+            console.log('Service Worker is registered', swReg);
 
-//     // var permissionData = window.safari.pushNotification.permission('web.com.example.domain');
-//     // checkRemotePermission(permissionData);
-// }
+            swRegistration = swReg;
+            initializeUI();
+        })
+        .catch(function (error) {
+            console.error('Service Worker Error', error);
+        });
+} else {
+    console.warn('Non-safari push messaging is not supported');
+    pushButton.textContent = 'Push Not Supported';
+}
 
-// if ('serviceWorker' in navigator && 'PushManager' in window) {
-//     console.log('Service Worker and Push is supported');
+function initializeUI() {
+    pushButton.addEventListener('click', function () {
+        pushButton.disabled = true;
 
-//     navigator.serviceWorker
-//         .register('sw.js')
-//         .then(function (swReg) {
-//             console.log('Service Worker is registered', swReg);
+        if (isSubscribed) {
+            unsubscribeUser();
+        } else {
+            subscribeUser();
+        }
+    });
 
-//             swRegistration = swReg;
-//             initializeUI();
-//         })
-//         .catch(function (error) {
-//             console.error('Service Worker Error', error);
-//         });
-// } else {
-//     console.warn('Push messaging is not supported');
-//     pushButton.textContent = 'Push Not Supported';
-// }
+    swRegistration.pushManager.getSubscription()
+        .then(function (subscription) {
+            isSubscribed = !(subscription === null);
 
-// function initializeUI() {
-//     pushButton.addEventListener('click', function () {
-//         pushButton.disabled = true;
+            if (isSubscribed) {
+                console.log('User IS subscribed.');
+            } else {
+                console.log('User is NOT subscribed.');
+            }
 
-//         if (isSubscribed) {
-//             unsubscribeUser();
-//         } else {
-//             subscribeUser();
-//         }
-//     });
+            updateBtn();
+        });
+}
 
-//     swRegistration.pushManager.getSubscription()
-//         .then(function (subscription) {
-//             isSubscribed = !(subscription === null);
+function unsubscribeUser() {
+    swRegistration.pushManager.getSubscription()
+        .then(subscription => {
+            if (subscription) {
+                return subscription.unsubscribe();
+            }
+        })
+        .catch((err) => {
+            console.log('Error unsubscribing', err);
+        })
+        .then(_ => {
+            updateSubscriptionOnServer(null);
 
-//             if (isSubscribed) {
-//                 console.log('User IS subscribed.');
-//             } else {
-//                 console.log('User is NOT subscribed.');
-//             }
+            console.log('User is unsubscribed.');
 
-//             updateBtn();
-//         });
-// }
+            isSubscribed = false;
 
-// function unsubscribeUser() {
-//     swRegistration.pushManager.getSubscription()
-//         .then(subscription => {
-//             if (subscription) {
-//                 return subscription.unsubscribe();
-//             }
-//         })
-//         .catch((err) => {
-//             console.log('Error unsubscribing', err);
-//         })
-//         .then(_ => {
-//             updateSubscriptionOnServer(null);
+            updateBtn();
+        });
+}
 
-//             console.log('User is unsubscribed.');
+function subscribeUser() {
+    const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
 
-//             isSubscribed = false;
+    swRegistration.pushManager
+        .subscribe({
+            userVisibleOnly: true,
+            applicationServerKey
+        })
+        .then(function (subscription) {
+            console.log('User is subscribed.');
 
-//             updateBtn();
-//         });
-// }
+            updateSubscriptionOnServer(subscription);
 
-// function subscribeUser() {
-//     const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+            isSubscribed = true;
 
-//     swRegistration.pushManager
-//         .subscribe({
-//             userVisibleOnly: true,
-//             applicationServerKey
-//         })
-//         .then(function (subscription) {
-//             console.log('User is subscribed.');
+            updateBtn();
+        })
+        .catch(function (err) {
+            console.log('Failed to subscribe the user: ', err);
+            updateBtn();
+        });
+}
 
-//             updateSubscriptionOnServer(subscription);
+function updateSubscriptionOnServer(subscription) {
+    const subscriptionJson = document.querySelector('.js-subscription-json');
+    const subscriptionDetails = document.querySelector('.js-subscription-details');
 
-//             isSubscribed = true;
+    if (subscription) {
+        subscriptionJson.textContent = JSON.stringify(subscription);
+        subscriptionDetails.classList.remove('is-invisible');
+    } else {
+        subscriptionDetails.classList.add('is-invisible');
+    }
+}
 
-//             updateBtn();
-//         })
-//         .catch(function (err) {
-//             console.log('Failed to subscribe the user: ', err);
-//             updateBtn();
-//         });
-// }
+function updateBtn() {
+    if (Notification.permission === 'denied') {
+        pushButton.textContent = 'Push Messaging Blocked.';
+        pushButton.disabled = true;
 
-// function updateSubscriptionOnServer(subscription) {
-//     const subscriptionJson = document.querySelector('.js-subscription-json');
-//     const subscriptionDetails = document.querySelector('.js-subscription-details');
+        updateSubscriptionOnServer(null);
 
-//     if (subscription) {
-//         subscriptionJson.textContent = JSON.stringify(subscription);
-//         subscriptionDetails.classList.remove('is-invisible');
-//     } else {
-//         subscriptionDetails.classList.add('is-invisible');
-//     }
-// }
+        return;
+    }
 
-// function updateBtn() {
-//     if (Notification.permission === 'denied') {
-//         pushButton.textContent = 'Push Messaging Blocked.';
-//         pushButton.disabled = true;
+    if (isSubscribed) {
+        pushButton.textContent = 'Disable Push Messaging';
+    } else {
+        pushButton.textContent = 'Enable Push Messaging';
+    }
 
-//         updateSubscriptionOnServer(null);
+    pushButton.disabled = false;
+}
 
-//         return;
-//     }
+function urlB64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
 
-//     if (isSubscribed) {
-//         pushButton.textContent = 'Disable Push Messaging';
-//     } else {
-//         pushButton.textContent = 'Enable Push Messaging';
-//     }
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
 
-//     pushButton.disabled = false;
-// }
-
-// function urlB64ToUint8Array(base64String) {
-//     const padding = '='.repeat((4 - base64String.length % 4) % 4);
-//     const base64 = (base64String + padding)
-//         .replace(/\-/g, '+')
-//         .replace(/_/g, '/');
-
-//     const rawData = window.atob(base64);
-//     const outputArray = new Uint8Array(rawData.length);
-
-//     for (let i = 0; i < rawData.length; ++i) {
-//         outputArray[i] = rawData.charCodeAt(i);
-//     }
-//     return outputArray;
-// }
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
