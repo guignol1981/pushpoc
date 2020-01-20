@@ -8,7 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Push Codelab</title>
+    <title>PushPoc</title>
 
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -23,15 +23,16 @@
 <body>
 
     <header>
-        <h1>Push Notifs POC</h1>
+        <h1 id="title"></h1>
     </header>
 
     <main>
-        <p>Welcome to the push messaging codelab. The button below needs to be
-            fixed to support subscribing to push.</p>
         <p>
-            <button id="safari">prompt safari notifications autorisation</button>
-            <button disabled
+            <button id="enable-push-safari"
+                    hidden>Enable push messaging</button>
+            <button id="enable-push-not-safari"
+                    disabled
+                    hidden
                     class="js-push-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                 Enable Push Messaging
             </button>

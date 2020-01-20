@@ -3,7 +3,7 @@
 const applicationServerPublicKey = 'BEMnipj1c0AtSHkAGYORpFPQl0BLhPdn2rUH8Qrxr1DcavcPwcr3tC9_44_RPreTBDrekp7MRaO2Fv6z3_hU8NA';
 
 const pushButton = document.querySelector('.js-push-btn');
-const safari = document.getElementById('safari');
+const safari = document.getElementById('enable-push-safari');
 
 let isSubscribed = false;
 let swRegistration = null;
@@ -39,6 +39,8 @@ var checkRemotePermission = function (permissionData) {
 };
 
 if ('safari' in window && 'pushNotification' in window.safari) {
+    document.getElementById('title').innerHTML = 'Environement: Safari'
+    document.getElementById('enable-push-safari').hidden = false;
     console.log('Safari push is supported');
 
     // var xhttp = new XMLHttpRequest();
@@ -55,6 +57,9 @@ if ('safari' in window && 'pushNotification' in window.safari) {
 }
 
 if ('serviceWorker' in navigator && 'PushManager' in window) {
+    document.getElementById('title').innerHTML = 'Environement: Not safari'
+    document.getElementById('enable-push-not-safari').visible = false;
+
     console.log('Service Worker and Push is supported');
 
     navigator.serviceWorker
