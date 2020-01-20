@@ -9,11 +9,13 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const path = require('path');
-const PORT = process.env.PORT;
+const pushAPI = require('./server/api/push');
+const port = process.env.PORT;
+
 app.use(express.static(path.join(__dirname, 'app')));
 
-app.use('/push', require('./server/api/push'));
+app.use('/push', pushAPI);
 
 app.get('*', (_, res) => res.sendFile(path.join(__dirname, 'app/index.html')));
 
-server.listen(PORT, () => console.log(`Pushpoc is running and listening on port ${PORT}`));
+server.listen(port, () => console.log(`Pushpoc is running and listening on port ${port}`));

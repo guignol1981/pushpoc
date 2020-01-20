@@ -51,6 +51,7 @@ function create_manifest($package_dir, $package_version) {
             throw new Exception('Invalid push package version.');
       }
     }
+
     file_put_contents("$package_dir/manifest.json", json_encode((object)$manifest_data));
 }
 
@@ -73,9 +74,11 @@ function create_signature($package_dir, $cert_path, $cert_password) {
     // Convert the signature from PEM to DER
     $signature_pem = file_get_contents($signature_path);
     $matches = array();
+
     if (!preg_match('~Content-Disposition:[^\n]+\s*?([A-Za-z0-9+=/\r\n]+)\s*?-----~', $signature_pem, $matches)) {
         return;
     }
+
     $signature_der = base64_decode($matches[1]);
     file_put_contents($signature_path, $signature_der);
 }
