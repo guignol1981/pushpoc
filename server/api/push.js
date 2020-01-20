@@ -5,7 +5,7 @@ const path = require('path');
 /**
  * Downloading Website Package
  */
-router.post(`/v2/pushPackage/${process.env.WEB_PUSH_ID}`, (req, res) => {
+router.post(`/v2/pushPackages/${process.env.WEB_PUSH_ID}`, (req, res) => {
     console.log('Downloading Website Package called')
 
     var exec = require("child_process").exec;
