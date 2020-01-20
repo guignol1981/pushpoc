@@ -1,7 +1,4 @@
 {
-    "license": "MIT",
-    "post-install-cmd": [
-        "php artisan clear-compiled",
-        "chmod -R 777 public/"
-    ]
+    "name": "pushpoc",
+    "description": "poc for push notification"
 }
