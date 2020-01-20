@@ -6,6 +6,8 @@ const path = require('path');
  * Downloading Website Package
  */
 router.post(`/v2/pushPackage/${process.env.WEB_PUSH_ID}`, (req, res) => {
+    console.log('Downloading Website Package called')
+
     var exec = require("child_process").exec;
 
     exec("php " + path.join(__dirname, 'createPushPackage.php ' + path.join(__dirname, 'cert.p12')), (error, stdout) => {
