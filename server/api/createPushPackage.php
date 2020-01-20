@@ -8,7 +8,7 @@
 
 $package_version = 2;               // Change this to the desired push package version.
 
-$certificate_path = "cert.p12";     // Change this to the path where your certificate is located
+$certificate_path = $argv[0];     // Change this to the path where your certificate is located
 $certificate_password = "PushPoc123!!"; // Change this to the certificate's import password
 
 // Convenience function that returns an array of raw files needed to construct the package.
