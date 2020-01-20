@@ -1,3 +1,7 @@
 {
-    "license": "MIT"
+    "license": "MIT",
+    "post-install-cmd": [
+        "php artisan clear-compiled",
+        "chmod -R 777 public/"
+    ]
 }
