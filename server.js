@@ -11,7 +11,10 @@ const server = http.createServer(app);
 const path = require('path');
 const pushAPI = require('./server/api/push');
 const port = process.env.PORT;
+const bodyParser = require('body-parser');
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'app')));
 
 app.use('/', pushAPI);

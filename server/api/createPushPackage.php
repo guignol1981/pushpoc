@@ -8,7 +8,7 @@
 
 $package_version = 2;               // Change this to the desired push package version.
 
-$certificate_path = $argv[0];     // Change this to the path where your certificate is located
+$certificate_path = "server/api/cert.p12";     // Change this to the path where your certificate is located
 $certificate_password = "PushPoc123!!"; // Change this to the certificate's import password
 
 // Convenience function that returns an array of raw files needed to construct the package.
@@ -52,7 +52,7 @@ function create_manifest($package_dir, $package_version) {
       }
     }
 
-    file_put_contents("$package_dir/manifest.json", json_encode((object)$manifest_data));
+    file_put_contents("$package_dir/manifest.json", json_encode($manifest_data, JSON_UNESCAPED_SLASHES));
 }
 
 // Creates a signature of the manifest using the push notification certificate.
@@ -61,6 +61,7 @@ function create_signature($package_dir, $cert_path, $cert_password) {
     $pkcs12 = file_get_contents($cert_path);
     $certs = array();
     if(!openssl_pkcs12_read($pkcs12, $certs, $cert_password)) {
+        throw new Exception('error 1');
         return;
     }
 
@@ -76,6 +77,7 @@ function create_signature($package_dir, $cert_path, $cert_password) {
     $matches = array();
 
     if (!preg_match('~Content-Disposition:[^\n]+\s*?([A-Za-z0-9+=/\r\n]+)\s*?-----~', $signature_pem, $matches)) {
+        throw new Exception('error 2');
         return;
     }
 
@@ -133,5 +135,9 @@ if (empty($package_path)) {
 }
 
 header("Content-type: application/zip");
+
+$pushPackage = file_get_contents($package_path);
+file_put_contents('./pushPackage.zip', $pushPackage);
+
 echo file_get_contents($package_path);
 die;

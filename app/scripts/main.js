@@ -9,23 +9,22 @@ let isSubscribed = false;
 let swRegistration = null;
 
 safari.addEventListener('click', () => {
-    window.safari.pushNotification.requestPermission(
-        'https://push-puc.herokuapp.com', // The web service URL.
-        'web.dti-ulaval.pushpoc',     // The Website Push ID.
-        {}, // Data that you choose to send to your server to help you identify the user.
-        checkRemotePermission         // The callback function.
-    );
+    if ('safari' in window && 'pushNotification' in window.safari) {
+        var permissionData = window.safari.pushNotification.permission('web.dti-ulaval.pushpoc');
+        checkRemotePermission(permissionData);
+    }
 });
 
 var checkRemotePermission = function (permissionData) {
+    console.log('permissionData', permissionData);
+
     if (permissionData.permission === 'default') {
-        // This is a new web service URL and its validity is unknown.
-        // window.safari.pushNotification.requestPermission(
-        //     'https://push-puc.herokuapp.com', // The web service URL.
-        //     'web.dti-ulaval.pushpoc',     // The Website Push ID.
-        //     {}, // Data that you choose to send to your server to help you identify the user.
-        //     checkRemotePermission         // The callback function.
-        // );
+        window.safari.pushNotification.requestPermission(
+            'https://76a3f99a.ngrok.io', // The web service URL.
+            'web.dti-ulaval.pushpoc',     // The Website Push ID.
+            {}, // Data that you choose to send to your server to help you identify the user.
+            checkRemotePermission         // The callback function.
+        );
     }
     else if (permissionData.permission === 'denied') {
         console.log('denied');
@@ -51,9 +50,6 @@ if ('safari' in window && 'pushNotification' in window.safari) {
     // };
     // xhttp.open("GET", "/push", true);
     // xhttp.send();
-
-    var permissionData = window.safari.pushNotification.permission('web.com.example.domain');
-    checkRemotePermission(permissionData);
 }
 
 if ('serviceWorker' in navigator && 'PushManager' in window) {
