@@ -16,14 +16,15 @@ router.post(`/v2/pushPackages/${process.env.WEB_PUSH_ID}`, (req, res) => {
 /**
  * Registering or Updating Device Permission Policy
  */
-router.post(`/v2/devices/:deviceToken/registrations/${process.env.WEB_PUSH_ID}`, (req, res) => {
+router.post(`/v1/devices/:deviceToken/registrations/${process.env.WEB_PUSH_ID}`, (req, res) => {
     console.log('Registering or Updating Device Permission Policy called');
+    res.send({});
 });
 
 /**
  * Forgetting Device Permission Policy
  */
-router.delete(`/v2/devices/:deviceToken/${process.env.WEB_PUSH_ID}`, (req, res) => {
+router.delete(`/v1/devices/:deviceToken/${process.env.WEB_PUSH_ID}`, (req, res) => {
     console.log('Forgetting Device Permission Policy called');
 });
 
@@ -33,7 +34,6 @@ router.delete(`/v2/devices/:deviceToken/${process.env.WEB_PUSH_ID}`, (req, res) 
  * pas clair pourquoi mais le module pushNotification de l'object Safari n'appel pas v2
  */
 router.post('/v1/log', (req, res) => {
-    console.log('Logging Errors called');
     console.log(req.body);
 });
 
