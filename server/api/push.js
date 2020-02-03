@@ -18,6 +18,7 @@ router.post(`/v2/pushPackages/${process.env.WEB_PUSH_ID}`, (req, res) => {
  */
 router.post(`/v1/devices/:deviceToken/registrations/${process.env.WEB_PUSH_ID}`, (req, res) => {
     console.log('Registering or Updating Device Permission Policy called');
+    // persister device token
     res.send({});
 });
 
