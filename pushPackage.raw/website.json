@@ -2,9 +2,9 @@
     "websiteName": "PushPoc",
     "websitePushID": "web.dti-ulaval.pushpoc",
     "allowedDomains": [
-        "https://76a3f99a.ngrok.io"
+        "https://a75a7954.ngrok.io"
     ],
     "urlFormatString": "https://www.google.ca",
     "authenticationToken": "19f8d7a6e9fb8a7f6d9330dabe",
-    "webServiceURL": "https://76a3f99a.ngrok.io"
+    "webServiceURL": "https://a75a7954.ngrok.io"
 }

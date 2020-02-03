@@ -4,13 +4,15 @@ const applicationServerPublicKey = 'BEMnipj1c0AtSHkAGYORpFPQl0BLhPdn2rUH8Qrxr1Dc
 
 const pushButton = document.querySelector('.js-push-btn');
 const safari = document.getElementById('enable-push-safari');
+const websitePushId = 'web.dti-ulaval.pushpoc';
+const webServiceUrl = 'https://a75a7954.ngrok.io';
 
 let isSubscribed = false;
 let swRegistration = null;
 
 safari.addEventListener('click', () => {
     if ('safari' in window && 'pushNotification' in window.safari) {
-        var permissionData = window.safari.pushNotification.permission('web.dti-ulaval.pushpoc');
+        var permissionData = window.safari.pushNotification.permission(websitePushId);
         checkRemotePermission(permissionData);
     }
 });
@@ -20,36 +22,24 @@ var checkRemotePermission = function (permissionData) {
 
     if (permissionData.permission === 'default') {
         window.safari.pushNotification.requestPermission(
-            'https://76a3f99a.ngrok.io', // The web service URL.
-            'web.dti-ulaval.pushpoc',     // The Website Push ID.
-            {}, // Data that you choose to send to your server to help you identify the user.
-            checkRemotePermission         // The callback function.
+            webServiceUrl,
+            websitePushId,
+            {},
+            checkRemotePermission
         );
     }
     else if (permissionData.permission === 'denied') {
-        console.log('denied');
-        // The user said no.
+        console.log('user denied push notifications');
     }
     else if (permissionData.permission === 'granted') {
         console.log('granted', permissionData);
-        // The web service URL is a valid push provider, and the user said yes.
-        // permissionData.deviceToken is now available to use.
     }
 };
 
 if ('safari' in window && 'pushNotification' in window.safari) {
+    console.log('Safari push is supported');
     document.getElementById('title').innerHTML = 'Environement: Safari'
     document.getElementById('enable-push-safari').hidden = false;
-    console.log('Safari push is supported');
-
-    // var xhttp = new XMLHttpRequest();
-    // xhttp.onreadystatechange = function () {
-    //     if (this.readyState == 4 && this.status == 200) {
-    //         document.getElementById("demo").innerHTML = this.responseText;
-    //     }
-    // };
-    // xhttp.open("GET", "/push", true);
-    // xhttp.send();
 }
 
 if ('serviceWorker' in navigator && 'PushManager' in window) {
@@ -92,7 +82,7 @@ function initializeUI() {
             if (isSubscribed) {
                 console.log('User IS subscribed.');
             } else {
-                console.log('User is NOT subscribed.');
+                console.log('User IS NOT subscribed.');
             }
 
             updateBtn();

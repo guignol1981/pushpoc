@@ -29,6 +29,8 @@ router.delete(`/v2/devices/:deviceToken/${process.env.WEB_PUSH_ID}`, (req, res) 
 
 /**
  * Logging Errors
+ *
+ * pas clair pourquoi mais le module pushNotification de l'object Safari n'appel pas v2
  */
 router.post('/v1/log', (req, res) => {
     console.log('Logging Errors called');

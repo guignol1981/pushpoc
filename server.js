@@ -1,6 +1,6 @@
-console.debug('environement', process.env.NODE_ENV);
+console.debug('Environement: ', process.env.NODE_ENV || 'development');
 
-if (process.env.NODE_ENV !== 'prod') {
+if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
@@ -21,4 +21,4 @@ app.use('/', pushAPI);
 
 app.get('*', (_, res) => res.sendFile(path.join(__dirname, 'app/index.html')));
 
-server.listen(port, () => console.log(`Pushpoc is running and listening on port ${port}`));
+server.listen(port, () => console.log(`PushPoc is running and listening on port ${port}`));
