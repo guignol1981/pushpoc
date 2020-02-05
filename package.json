@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Push notifications POC.",
     "scripts": {
-        "dev": "concurrently --kill-others \"nodemon server.js\"",
+        "dev": "nodemon server.js",
         "start": "node server.js",
         "generate-push-package": "php server/api/createPushPackage.php"
     },

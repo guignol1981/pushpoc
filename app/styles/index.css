@@ -13,44 +13,60 @@ body {
   box-sizing: border-box;
 }
 
-header {
-  padding: 115px 0 32px 0;
-  background-color: #00bcd4;
-  color: white;
+.header {
+    padding: 2rem;
+    background-color: #f1c40f;
+    height: 10vh;
 }
 
-main, header > h1 {
-  padding: 0 16px;
-  max-width: 760px;
-  box-sizing: border-box;
-  margin: 0 auto;
+.title {
+    color: #2980b9;
 }
 
-main {
-  margin: 24px auto;
-  box-sizing: border-box;
+.environement {
+    color: red;
 }
 
-pre {
-  white-space: pre-wrap;
-  background-color: #EEEEEE;
-  padding: 16px;
+.body {
+    background-color:#34495e;
+    height: 80vh;
+    padding: 2rem;
+    display: flex;
+    justify-content: space-around;
 }
 
-pre code {
-  word-break: break-word;
+.controls {
+    width: 100%;
+    border-right: solid black 1rem;
+    padding: 1rem;
 }
 
-.is-invisible {
-  opacity: 0;
+.status {
+    width: 100%;
+    padding: 1rem;
 }
 
-.subscription-details {
-  transition: opacity 1s;
+.section-title {
+    color: white;
 }
 
-@media (max-width: 600px) {
-  header > h1 {
-    font-size: 36px;
-  }
+.formgroup {
+    width: 100%;
+}
+
+.formgroup > label {
+    color: white;
+}
+
+.status-info > p {
+    padding-top: 1rem;
+    font-size: 2rem;
+}
+
+.status-value {
+    color: #e74c3c;
+}
+
+.mt-sm {
+    margin-top: 1rem;
 }

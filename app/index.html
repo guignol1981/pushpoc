@@ -27,26 +27,81 @@
     </header>
 
     <main>
-        <p>
-            <button id="enable-push-safari"
-                    hidden>Enable push messaging</button>
-            <button id="enable-push-not-safari"
-                    disabled
-                    hidden
-                    class="js-push-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                Enable Push Messaging
-            </button>
-        </p>
-        <section class="subscription-details js-subscription-details is-invisible">
-            <p>Once you've subscribed your user, you'd send their subscription to your
-                server to store in a database so that when you want to send a message
-                you can lookup the subscription and send a message to it.</p>
-            <p>To simplify things for this code lab copy the following details
-                into the <a href="https://web-push-codelab.glitch.me//">Push Companion
-                    Site</a> and it'll send a push message for you, using the application
-                server keys on the site - so make sure they match.</p>
-            <pre><code class="js-subscription-json"></code></pre>
-        </section>
+        <div class="header">
+            <h2 class="title">
+                Push notification POC pour DTI ULAVAL
+            </h2>
+        </div>
+        <div class="body">
+            <div class="controls">
+                <h3 class="section-title">
+                    controls
+                </h3>
+                <div>
+                    <button id="enable-push">
+                        Enable push notification
+                    </button>
+                    <button id="subscribe">
+                        Subscribe
+                    </button>
+                    <button>
+                        Unsubscribe
+                    </button>
+                </div>
+                <hr>
+                <div>
+                    <h4 class="section-title">
+                        Notification payload
+                    </h4>
+                    <div class="formgroup">
+                        <label>
+                            Title
+                        </label>
+                        <br>
+                        <input type="text"
+                               placeholder="title">
+                    </div>
+                    <div class="formgroup">
+                        <label>
+                            Body
+                        </label>
+                        <br>
+                        <input type="text"
+                               placeholder="title">
+                    </div>
+                    <button class="mt-sm">
+                        Test push notification
+                    </button>
+                </div>
+            </div>
+
+            <div class="status">
+                <h3 class="section-title">
+                    <div class="status-info">
+                        <p>
+                            Environment: <span class="status-value">Safari</span>
+                        </p>
+                        <p>
+                            Permission status: <span class="status-value">Granted</span>
+                        </p>
+                        <p>
+                            Device token: <span class="status-value">12739817239</span>
+                        </p>
+                        <p>
+                            Web push id: <span class="status-value">web.push.ulaval</span>
+                        </p>
+                        <p>
+                            Application server public key : <span class="status-value">1231adsda123123</span>
+                        </p>
+                        <hr>
+                        <p>
+                            Console output: <span id="console-output"
+                                  class="status-value"></span>
+                        </p>
+                    </div>
+                </h3>
+            </div>
+        </div>
     </main>
 
     <script src="scripts/main.js"></script>
