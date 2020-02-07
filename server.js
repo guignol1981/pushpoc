@@ -1,19 +1,15 @@
-console.debug('Environement: ', process.env.NODE_ENV || 'development');
-
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config();
-}
-
 const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const path = require('path');
 const pushAPI = require('./server/api/push');
-const port = process.env.PORT;
+const port = 3000;
 const bodyParser = require('body-parser');
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'app')));
 

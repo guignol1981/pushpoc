@@ -1,25 +1,54 @@
 'use strict';
 
+const webPushId = 'web.dti-ulaval.pushpoc';
+const webServerUrl = 'todo';
 const applicationServerPublicKey = 'BH-O7kTwRaZot55-jessFjX1Q7lRRMyb2CcqSjD_y9ho1JoGZguQbFWYZecCCOYNmf0258HpOJ-4SzzpmlXfSVc';
 const pushButton = document.querySelector('.js-push-btn');
 const safari = document.getElementById('enable-push-safari');
 const enablePushButton = document.getElementById('enable-push');
 const subscribeButton = document.getElementById('subscribe');
 const consoleOutputSpan = document.getElementById('console-output');
+const environementSpan = document.getElementById('environement');
+const permissionSpan = document.getElementById('permission');
+const subscribedSpan = document.getElementById('subscribed');
+const supportedSpan = document.getElementById('supported');
 
 let isSubscribed = false;
 let swRegistration = null;
+let isSupported = false;
+const isSafari = 'safari' in window;
 
-let isSafari = 'safari' in window;
 
-const trace = (msg, obj) => {
-    console.log(msg, obj);
-    consoleOutputSpan.innerHTML = msg;
+function trace(m, o) {
+    console.log(m, o);
+    consoleOutputSpan.innerHTML = m;
 }
 
+if (isSafari) {
+    isSupported = 'pushNotification' in window.safari;
+    subscribedSpan.innerHTML = 'not related to safari';
+} else {
+    isSupported = 'PushManager' in window;
+    permissionSpan.innerHTML = 'not related to non-safari';
+}
+
+if (!isSupported) {
+    trace('Push not supported');
+}
+
+updateStatus();
+
 enablePushButton.addEventListener('click', () => {
+    if (!isSupported) {
+        return;
+    }
+
     if (isSafari && 'pushNotification' in window.safari) {
-        var permissionData = window.safari.pushNotification.permission('web.dti-ulaval.pushpoc');
+        var permissionData = window
+            .safari
+            .pushNotification
+            .permission(webPushId);
+
         checkRemotePermission(permissionData);
     } else if ('serviceWorker' in navigator && 'PushManager' in window) {
         navigator.serviceWorker
@@ -27,7 +56,7 @@ enablePushButton.addEventListener('click', () => {
             .then(function (swReg) {
                 trace('Service Worker is registered', swReg);
                 swRegistration = swReg;
-                initializeUI();
+                updateStatus();
             })
             .catch(function (error) {
                 console.error('Service Worker Error', error);
@@ -36,96 +65,61 @@ enablePushButton.addEventListener('click', () => {
 });
 
 subscribeButton.addEventListener('click', () => {
-    if (safari) {
+    if (safari || !swRegistration) {
         return;
     }
 
-    subscribeNonSafari();
+    const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+
+    swRegistration.pushManager
+        .subscribe({
+            userVisibleOnly: true,
+            applicationServerKey
+        })
+        .then(_ => {
+            trace('User is subscribed.');
+            updateStatus();
+        })
+        .catch((err) => {
+            trace('Failed to subscribe the user: ', err);
+        });
 });
 
-// safari.addEventListener('click', () => {
-//     if ('safari' in window && 'pushNotification' in window.safari) {
-//         var permissionData = window.safari.pushNotification.permission('web.dti-ulaval.pushpoc');
-//         checkRemotePermission(permissionData);
-//     }
-// });
+function checkRemotePermission(permissionData) {
+    trace('permissionData', permissionData);
 
-// var checkRemotePermission = function (permissionData) {
-//     trace('permissionData', permissionData);
-
-//     if (permissionData.permission === 'default') {
-//         window.safari.pushNotification.requestPermission(
-//             'https://76a3f99a.ngrok.io', // The web service URL.
-//             'web.dti-ulaval.pushpoc',     // The Website Push ID.
-//             {}, // Data that you choose to send to your server to help you identify the user.
-//             checkRemotePermission         // The callback function.
-//         );
-//     }
-//     else if (permissionData.permission === 'denied') {
-//         trace('denied');
-//         // The user said no.
-//     }
-//     else if (permissionData.permission === 'granted') {
-//         trace('granted', permissionData);
-//         // The web service URL is a valid push provider, and the user said yes.
-//         // permissionData.deviceToken is now available to use.
-//     }
-// };
-
-// if ('safari' in window && 'pushNotification' in window.safari) {
-//     document.getElementById('title').innerHTML = 'Environement: Safari'
-//     document.getElementById('enable-push-safari').hidden = false;
-//     trace('Safari push is supported');
-
-//     // var xhttp = new XMLHttpRequest();
-//     // xhttp.onreadystatechange = function () {
-//     //     if (this.readyState == 4 && this.status == 200) {
-//     //         document.getElementById("demo").innerHTML = this.responseText;
-//     //     }
-//     // };
-//     // xhttp.open("GET", "/push", true);
-//     // xhttp.send();
-// }
-
-// if ('serviceWorker' in navigator && 'PushManager' in window) {
-//     document.getElementById('title').innerHTML = 'Environement: Not safari'
-//     document.getElementById('enable-push-not-safari').visible = false;
-
-//     trace('Service Worker and Push is supported');
-
-//     navigator.serviceWorker
-//         .register('sw.js')
-//         .then(function (swReg) {
-//             trace('Service Worker is registered', swReg);
-
-//             swRegistration = swReg;
-//             initializeUI();
-//         })
-//         .catch(function (error) {
-//             console.error('Service Worker Error', error);
-//         });
-// } else {
-//     console.warn('Non-safari push messaging is not supported');
-//     pushButton.textContent = 'Push Not Supported';
-// }
-
-function initializeUI() {
-    if (isSafari) {
-        return;
+    if (permissionData.permission === 'default') {
+        window.safari.pushNotification.requestPermission(
+            webServerUrl, webPushId, {}, // user data
+            checkRemotePermission
+        );
+    } else if (permissionData.permission === 'denied') {
+        trace('denied');
+    } else if (permissionData.permission === 'granted') {
+        trace('granted', permissionData);
     }
+    updateStatus();
+}
 
-    swRegistration.pushManager.getSubscription()
-        .then(function (subscription) {
-            isSubscribed = !(subscription === null);
+function updateStatus() {
+    environementSpan.innerHTML = isSafari ? 'Safari' : 'Non-Safari';
+    supportedSpan.innerHTML = isSupported;
 
-            if (isSubscribed) {
-                trace('User IS subscribed.');
-                consoleOutputSpan.innerHTML = 'User IS subscribed';
-            } else {
-                trace('User is NOT subscribed.');
-                consoleOutputSpan.innerHTML = 'User IS NOT subscribed';
-            }
-        });
+    if (isSafari) {
+        const permissionData = window
+            .safari
+            .pushNotification
+            .permission(webPushId);
+
+        permissionSpan.innerHTML = permissionData.permission;
+        return;
+    } else if (swRegistration) {
+        swRegistration.pushManager.getSubscription()
+            .then((subscription) => {
+                isSubscribed = !(subscription === null);
+                subscribedSpan.innerHTML = isSubscribed;
+            });
+    }
 }
 
 // function unsubscribeUser() {
@@ -149,56 +143,6 @@ function initializeUI() {
 //         });
 // }
 
-function subscribeNonSafari() {
-    const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
-
-    swRegistration.pushManager
-        .subscribe({
-            userVisibleOnly: true,
-            applicationServerKey
-        })
-        .then(function (subscription) {
-            trace('User is subscribed.');
-
-            // updateSubscriptionOnServer(subscription);
-
-            isSubscribed = true;
-        })
-        .catch(function (err) {
-            trace('Failed to subscribe the user: ', err);
-        });
-}
-
-// function updateSubscriptionOnServer(subscription) {
-//     const subscriptionJson = document.querySelector('.js-subscription-json');
-//     const subscriptionDetails = document.querySelector('.js-subscription-details');
-
-//     if (subscription) {
-//         subscriptionJson.textContent = JSON.stringify(subscription);
-//         subscriptionDetails.classList.remove('is-invisible');
-//     } else {
-//         subscriptionDetails.classList.add('is-invisible');
-//     }
-// }
-
-// function updateBtn() {
-//     if (Notification.permission === 'denied') {
-//         pushButton.textContent = 'Push Messaging Blocked.';
-//         pushButton.disabled = true;
-
-//         updateSubscriptionOnServer(null);
-
-//         return;
-//     }
-
-//     if (isSubscribed) {
-//         pushButton.textContent = 'Disable Push Messaging';
-//     } else {
-//         pushButton.textContent = 'Enable Push Messaging';
-//     }
-
-//     pushButton.disabled = false;
-// }
 
 function urlB64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
