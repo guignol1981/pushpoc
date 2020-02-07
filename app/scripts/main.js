@@ -1,7 +1,6 @@
 'use strict';
 
 const webPushId = 'web.dti-ulaval.pushpoc';
-const webServerUrl = 'todo';
 const applicationServerPublicKey = 'BH-O7kTwRaZot55-jessFjX1Q7lRRMyb2CcqSjD_y9ho1JoGZguQbFWYZecCCOYNmf0258HpOJ-4SzzpmlXfSVc';
 const pushButton = document.querySelector('.js-push-btn');
 const safari = document.getElementById('enable-push-safari');
@@ -16,6 +15,7 @@ const webServerUrlButton = document.getElementById('web-server-url-button');
 const webServerUrlInput = document.getElementById('web-server-url-input');
 const webServerUrlSpan = document.getElementById('web-server-url');
 
+let webServerUrl = '';
 let isSubscribed = false;
 let swRegistration = null;
 let isSupported = false;
@@ -42,7 +42,7 @@ if (!isSupported) {
 updateStatus();
 
 webServerUrlButton.addEventListener('click', () => {
-    webServerUrlSpan.innerHTML = webServerUrlInput.value;
+    webServerUrl = webServerUrlSpan.innerHTML = webServerUrlInput.value;
 });
 
 enablePushButton.addEventListener('click', () => {
