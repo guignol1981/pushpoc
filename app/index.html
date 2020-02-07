@@ -11,14 +11,6 @@
     <title>PushPoc</title>
 
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet"
-          href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
-    <script defer
-            src="https://code.getmdl.io/1.2.1/material.min.js"></script>
-    <link rel="stylesheet"
-          href="styles/index.css">
-    <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
@@ -26,17 +18,27 @@
 
 <body class="bg-dark">
     <main class="container">
-        <div>
-            <h2 class="text-light">
-                Push notification POC pour DTI ULAVAL
-            </h2>
-        </div>
-        <div class="card mt-5">
+        <h2 class="text-light">
+            Push notification POC pour DTI ULAVAL
+        </h2>
+        <div class="card mt-3">
             <div class="card-body">
                 <div class="card-title">
                     Controls
                 </div>
-                <div>
+                <div class="card-text">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-secondary"
+                                    id="web-server-url-button">update</span>
+                        </div>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="web server url"
+                               id="web-server-url-input">
+                    </div>
+                </div>
+                <div class="card-body">
                     <button class="btn btn-primary"
                             id="enable-push">
                         Enable push notification
@@ -56,48 +58,62 @@
                 <div class="card-title">
                     Notification payload
                 </div>
-                <div class="form-group">
-                    <label>
-                        Title
-                    </label>
-                    <br>
-                    <input type="text"
-                           class="form-control"
-                           placeholder="title">
+                <div class="card-text">
+                    <div class="form-group">
+                        <label>
+                            Title
+                        </label>
+                        <br>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="title">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Body
+                        </label>
+                        <br>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="title">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>
-                        Body
-                    </label>
-                    <br>
-                    <input type="text"
-                           class="form-control"
-                           placeholder="title">
+                <div class="card-body">
+                    <button class="btn btn-primary mt-2">
+                        Send push
+                    </button>
                 </div>
-                <button class="btn btn-primary mt-2">
-                    Send push
-                </button>
             </div>
         </div>
 
         <div class="card mt-2">
-            <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between font-weight-bold text-info">
-                    Environment: <span id="environement"></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between font-weight-bold text-info">
-                    Push supported: <span id="supported"></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between font-weight-bold text-info">
-                    Permission status: <span id="permission"></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between font-weight-bold text-info">
-                    Subscribed: <span id="subscribed"></span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between font-weight-bold text-info">
-                    Console output: <span id="console-output"></span>
-                </li>
-            </ul>
+            <div class="card-body">
+                <div class="card-title">
+                    Status
+                </div>
+                <div class="card-text">
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between font-weight-bold text-info">
+                            Web server url: <span id="web-server-url"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between font-weight-bold text-info">
+                            Environment: <span id="environement"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between font-weight-bold text-info">
+                            Push supported: <span id="supported"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between font-weight-bold text-info">
+                            Permission status: <span id="permission"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between font-weight-bold text-info">
+                            Subscribed: <span id="subscribed"></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between font-weight-bold text-info">
+                            Console output: <span id="console-output"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </main>
 

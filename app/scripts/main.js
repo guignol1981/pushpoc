@@ -12,6 +12,9 @@ const environementSpan = document.getElementById('environement');
 const permissionSpan = document.getElementById('permission');
 const subscribedSpan = document.getElementById('subscribed');
 const supportedSpan = document.getElementById('supported');
+const webServerUrlButton = document.getElementById('web-server-url-button');
+const webServerUrlInput = document.getElementById('web-server-url-input');
+const webServerUrlSpan = document.getElementById('web-server-url');
 
 let isSubscribed = false;
 let swRegistration = null;
@@ -37,6 +40,10 @@ if (!isSupported) {
 }
 
 updateStatus();
+
+webServerUrlButton.addEventListener('click', () => {
+    webServerUrlSpan.innerHTML = webServerUrlInput.value;
+});
 
 enablePushButton.addEventListener('click', () => {
     if (!isSupported) {
